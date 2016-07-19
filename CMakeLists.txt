@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(nmea_TCP_driver)
+project(nmea_tcp_driver)
 
 find_package(catkin REQUIRED COMPONENTS roslint)
 
@@ -7,9 +7,9 @@ catkin_python_setup()
 catkin_package()
 
 install(PROGRAMS
-   scripts/nmea_TCO_driver
+   scripts/nmea_tcp_driver
    scripts/nmea_topic_driver
-   scripts/nmea_topic_TCP_reader
+   scripts/nmea_topic_tcp_reader
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

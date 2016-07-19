@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>nmea_TCP_driver</name>
+  <name>nmea_tcp_driver</name>
   <version>0.5.0</version>
   <description>
 	Package to parse NMEA strings from TCP input and publish a very simple GPS message. Does not require the GPSD deamon.
