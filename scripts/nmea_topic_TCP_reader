@@ -1,0 +1,87 @@
+#! /usr/bin/env python
+
+# Software License Agreement (BSD License)
+#
+# Copyright (c) 2013, Eric Perko
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above
+#    copyright notice, this list of conditions and the following
+#    disclaimer in the documentation and/or other materials provided
+#    with the distribution.
+#  * Neither the names of the authors nor the names of their
+#    affiliated organizations may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+
+import serial
+import socket               # Import socket module
+import rospy
+import os                   #import libraries necessary for running the ifconfigg.sh file
+import sys
+from nmea_msgs.msg import Sentence
+from libnmea_navsat_driver.driver import RosNMEADriver
+
+if __name__ == '__main__':
+    rospy.init_node('nmea_topic_serial_reader')
+
+    nmea_pub = rospy.Publisher("nmea_sentence", Sentence)
+
+    s = socket.socket()         # Create a socket object
+    host = rospy.get_param('~host', 'reach.local')
+    port = rospy.get_param('~port', 12346)
+    #Reach = rospy.get_param('~reach', True)     #Check if mode of operation is the Reach GPS RTK
+    sudoPassword = rospy.get_param('~sudoPassword', 'turtlebot')    #Sudo password required as input to continuously run ifconfig and keep the TCP connection connected
+
+
+
+    s.connect((host, port))
+    print "Device Connected"
+
+    # Get the frame_id
+    frame_id = RosNMEADriver.get_frame_id()
+
+    try:
+        GPS = s.recv(1024)
+        while not rospy.is_shutdown():
+            GPS = s.recv(1024)
+            data = GPS.strip()   
+        
+            split = data.split()
+            print split
+            data = split[0]
+            for el in split:
+              if 'GPGGA' in el:
+                  print "GPGGA found"
+                  data = el
+                  break
+              elif 'RMC' in el:
+                  data = el   
+            
+            sentence = Sentence()
+            sentence.header.stamp = rospy.get_rostime()
+	    sentence.header.frame_id = frame_id
+            sentence.sentence = data
+
+            nmea_pub.publish(sentence)
+
+    except rospy.ROSInterruptException:
+        GPS.close       #Close GPS socket when done
