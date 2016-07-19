@@ -41,17 +41,13 @@ from nmea_msgs.msg import Sentence
 from libnmea_navsat_driver.driver import RosNMEADriver
 
 if __name__ == '__main__':
-    rospy.init_node('nmea_topic_serial_reader')
+    rospy.init_node('nmea_topic_tcp_reader')
 
     nmea_pub = rospy.Publisher("nmea_sentence", Sentence)
 
     s = socket.socket()         # Create a socket object
     host = rospy.get_param('~host', 'reach.local')
     port = rospy.get_param('~port', 12346)
-    #Reach = rospy.get_param('~reach', True)     #Check if mode of operation is the Reach GPS RTK
-    sudoPassword = rospy.get_param('~sudoPassword', 'turtlebot')    #Sudo password required as input to continuously run ifconfig and keep the TCP connection connected
-
-
 
     s.connect((host, port))
     print "Device Connected"
@@ -78,7 +74,7 @@ if __name__ == '__main__':
             
             sentence = Sentence()
             sentence.header.stamp = rospy.get_rostime()
-	    sentence.header.frame_id = frame_id
+	        sentence.header.frame_id = frame_id
             sentence.sentence = data
 
             nmea_pub.publish(sentence)
