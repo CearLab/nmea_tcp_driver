@@ -35,7 +35,7 @@
 import serial
 import socket               # Import socket module
 import rospy
-import os                   #import libraries necessary for running the ifconfigg.sh file
+import os                   # Import libraries necessary for running the ifconfigg.sh file
 import sys
 from nmea_msgs.msg import Sentence
 from libnmea_navsat_driver.driver import RosNMEADriver
@@ -62,11 +62,9 @@ if __name__ == '__main__':
             data = GPS.strip()   
         
             split = data.split()
-            print split
             data = split[0]
             for el in split:
               if 'GPGGA' in el:
-                  print "GPGGA found"
                   data = el
                   break
               elif 'RMC' in el:

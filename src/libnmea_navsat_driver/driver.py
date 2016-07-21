@@ -43,9 +43,9 @@ import libnmea_navsat_driver.parser
 
 class RosNMEADriver(object):
     def __init__(self):
-        self.fix_pub = rospy.Publisher('TCPfix', NavSatFix, queue_size=1)
-        self.vel_pub = rospy.Publisher('TCPvel', TwistStamped, queue_size=1)
-        self.time_ref_pub = rospy.Publisher('TCPtime_reference', TimeReference, queue_size=1)
+        self.fix_pub = rospy.Publisher('tcpfix', NavSatFix, queue_size=1)
+        self.vel_pub = rospy.Publisher('tcpvel', TwistStamped, queue_size=1)
+        self.time_ref_pub = rospy.Publisher('tcptime_reference', TimeReference, queue_size=1)
 
         self.time_ref_source = rospy.get_param('~time_ref_source', None)
         self.use_RMC = rospy.get_param('~useRMC', False)

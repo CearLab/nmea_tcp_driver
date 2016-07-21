@@ -52,20 +52,15 @@ if __name__ == '__main__':
 
     try:
         GPS = s.recv(1024)
-        print "Message Received"
         driver = libnmea_navsat_driver.driver.RosNMEADriver()
-        print "driver:", driver
-        print "fix_pub of driver", driver.fix_pub
         while not rospy.is_shutdown():
             GPS = s.recv(1024)
             data = GPS.strip()
 	    
     	    split = data.split()
-            print split
             data = split[0]
     	    for el in split:
     		  if 'GPGGA' in el:
-    		      print "GPGGA found"
     		      data = el
     		      break
     		  elif 'RMC' in el:
@@ -74,7 +69,6 @@ if __name__ == '__main__':
 
             try:
                 driver.add_sentence(data, frame_id)
-                print "added sentence to driver"
             except ValueError as e:
                 rospy.logwarn("Value error, likely due to missing fields in the NMEA message. Error was: %s. Please report this issue at github.com/ros-drivers/nmea_navsat_driver, including a bag file with the NMEA sentences that caused it." % e)
 
