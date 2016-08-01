@@ -37,7 +37,7 @@ Then run rostopic list, and the following topics should be present (provided a p
 
     /tcpfix
     /tcpvel
-    /tcptime
+    /tcptime_reference
     
 ### ROS Parameters
 
