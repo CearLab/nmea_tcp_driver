@@ -52,7 +52,8 @@ Then run rostopic list, and the following topics should be present (provided a p
 
 - The ifconfig.sh file in the /scripts folder is used to fix a network manager issue some computers might have when mainting USB TCP connection with the Reach RTK. We witnessed this issue in only one of three computers, and it was not a large issue but is worth fixing. The ifconfig.sh script simply infinitely calls the "sudo ifconfig usb0 192.168.2.2" command so that any disconnections can be quickly reconnected. To run it, open a new terminal, move to the scripts folder, and run ./ifconfig.sh .
 - Some computers have issues when attempting to connect to the reach.local host (default), so if connection issues are encountered, try running nmea_tcp_driver with the host number passed as a parameter, EX: "rosrun nmea_tcp_driver nmea_tcp_driver host=192.168.2.15"
-    
+- The status numbers have the following correlations:     "0 = NO_FIX, 1 = FIX, 2 = SBAS_FIX, 4/5 = GBAS_FIX"
+
 API
 ---
 
