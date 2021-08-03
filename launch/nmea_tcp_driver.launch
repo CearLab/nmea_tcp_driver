@@ -1,0 +1,15 @@
+<launch>
+
+  <!-- A simple launch file for the nmea_serial_driver node. -->
+
+  <arg name="host" default="reach.local" />
+  <arg name="port" default="12346" />
+  <arg name="frame_id" default="gps" />
+
+  <node name="nmea_tcp_driver_node" pkg="nmea_tcp_driver" type="nmea_tcp_driver" output="screen">
+    <param name="host" value="$(arg host)" />
+    <param name="port" value="$(arg port)"/>
+    <param name="frame_id" value="$(arg frame_id)" />
+  </node>
+
+</launch>
